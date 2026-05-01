@@ -1,7 +1,7 @@
 "use client";
 import { Settings } from "lucide-react";
 import Link from "next/link";
-import { API_URL } from "@/services/api";
+import { API_URL } from "@/src/services/api";
 
 
 export default function AdminSettingsPage() {

@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/* Tailwind v4: class-based dark mode */
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Medical Blue palette */
+  --color-primary-50:  #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+
+  /* Dark surface tokens */
+  --color-dark-bg:     #0f172a;
+  --color-dark-card:   #1e293b;
+  --color-dark-border: #334155;
+}
+
+@layer base {
+  :root {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+  }
+
+  .dark {
+    --background: #0f172a;
+    --foreground: #f8fafc;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400 dark:bg-slate-600;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold
+           py-2 px-4 rounded-xl shadow-lg shadow-primary-500/20
+           active:scale-95 transition-all duration-200
+           disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-outline {
+    @apply border-2 border-slate-200 dark:border-slate-700
+           hover:border-primary-500 dark:hover:border-primary-500
+           text-slate-700 dark:text-slate-200 font-semibold
+           py-2 px-4 rounded-xl transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white dark:bg-dark-card
+           border border-slate-200 dark:border-dark-border
+           rounded-2xl shadow-sm p-6
+           transition-all duration-200 hover:shadow-md;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2.5
+           bg-white dark:bg-slate-800
+           border border-slate-200 dark:border-slate-700
+           rounded-xl text-slate-900 dark:text-white
+           placeholder:text-slate-400 dark:placeholder:text-slate-500
+           focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500
+           transition-all duration-200;
+  }
+
+  .glass-panel {
+    @apply bg-white/70 dark:bg-slate-900/70
+           backdrop-blur-xl
+           border border-white/20 dark:border-slate-800/50
+           shadow-2xl;
+  }
+
+  .badge-success {
+    @apply px-2.5 py-0.5 rounded-full text-xs font-semibold
+           bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400;
+  }
+  .badge-warning {
+    @apply px-2.5 py-0.5 rounded-full text-xs font-semibold
+           bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400;
+  }
+  .badge-danger {
+    @apply px-2.5 py-0.5 rounded-full text-xs font-semibold
+           bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400;
+  }
+  .badge-primary {
+    @apply px-2.5 py-0.5 rounded-full text-xs font-semibold
+           bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400;
+  }
+}
+
+/* ─── Animations ─────────────────────────────── */
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+  50%      { box-shadow: 0 0 20px 5px rgba(59, 130, 246, 0.2); }
+}
+
+.animate-slideIn    { animation: slideIn 0.3s ease-out; }
+.animate-fadeInUp   { animation: fadeInUp 0.5s ease-out; }
+.animate-float      { animation: float 3s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+/* Stagger children */
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 80ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 320ms; }

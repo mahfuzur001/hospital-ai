@@ -52,3 +52,18 @@ class DoctorEmbeddingModel(models.Model):
 
     def __str__(self):
         return f"{self.doctor.user.email} - Embedding"
+
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=DoctorProfileModel)
+def auto_sync_doctor_embedding(sender, instance, created, **kwargs):
+    """
+    DoctorProfileModel save (create/update) হলে auto-sync embedding data trigger করে।
+    """
+    from .rag_services import RAGService
+    try:
+        RAGService.sync_doctor_data()
+    except Exception as e:
+        print(f"Error auto-syncing doctor embedding: {e}")

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Users, Loader2, AlertCircle, CheckCircle, RefreshCw, Stethoscope, Trash2, Edit2, Search, Building2 } from "lucide-react";
+import { Users, Loader2, AlertCircle, CheckCircle, RefreshCw, Stethoscope, Trash2, Edit2, Search, Building2, X } from "lucide-react";
 import api, { getList } from "../../../../src/services/api";
 import LoadingSkeleton from "../../../../components/LoadingSkeleton";
 import { showToast } from "../../../../components/Toast";
@@ -68,11 +68,20 @@ export default function AdminDoctorsPage() {
     }
   };
 
-  const filteredDoctors = doctors.filter(d => 
-    d.user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (d.user.first_name + " " + d.user.last_name).toLowerCase().includes(searchTerm.toLowerCase()) ||
-    d.speciality?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredDoctors = doctors.filter(d => {
+    if (!searchTerm.trim()) return true;
+    const term = searchTerm.toLowerCase().trim();
+    return (
+      d.user.username.toLowerCase().includes(term) ||
+      (d.user.first_name + " " + d.user.last_name).toLowerCase().includes(term) ||
+      (d.user.first_name || "").toLowerCase().includes(term) ||
+      (d.user.last_name || "").toLowerCase().includes(term) ||
+      d.speciality?.toLowerCase().includes(term) ||
+      d.qualification?.toLowerCase().includes(term) ||
+      d.hospital_name?.toLowerCase().includes(term) ||
+      d.user.email?.toLowerCase().includes(term)
+    );
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -218,10 +227,19 @@ export default function AdminDoctorsPage() {
                 <input 
                   type="text" 
                   placeholder="Search doctor..." 
-                  className="input-field pl-9 py-1.5 text-sm"
+                  className="input-field pl-9 pr-8 py-1.5 text-sm"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
+                {searchTerm && (
+                  <button 
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                    title="Clear search"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
               </div>
             </div>
 

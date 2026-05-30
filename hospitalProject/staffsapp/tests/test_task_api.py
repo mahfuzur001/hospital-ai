@@ -44,4 +44,4 @@ def test_staff_can_view_own_tasks(api_client):
     response = api_client.get(url)
 
     assert response.status_code == 200
-    assert len(response.data) == 1
+    assert response.data['count'] == 1

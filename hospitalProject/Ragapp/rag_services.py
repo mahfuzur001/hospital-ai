@@ -1,5 +1,6 @@
 import os
 import sys
+# pyrefly: ignore [missing-import]
 import faiss
 import numpy as np
 from django.conf import settings
@@ -163,12 +164,18 @@ def rule_based_response(query: str) -> str:
         doc_list = []
         for d in relevant_docs:
             lines = d.content.splitlines()
+            if not lines:
+                continue
             name = lines[0].replace("Doctor: ", "")
             # Skip if name is just 'admin' to look more professional
             if name.lower() == 'admin':
                 continue
             
-            spec = lines[1].replace("Speciality: ", "")
+            spec = "General Medicine"
+            for line in lines:
+                if line.startswith("Speciality:"):
+                    spec = line.replace("Speciality: ", "")
+                    break
             doc_list.append(f"👨‍⚕️ **{name}**\n   _{spec}_")
         
         doc_list_str = "\n".join(doc_list)
@@ -197,8 +204,14 @@ def rule_based_response(query: str) -> str:
     doc_list = []
     for d in general_docs:
         lines = d.content.splitlines()
+        if not lines:
+            continue
         name = lines[0].replace("Doctor: ", "")
-        spec = lines[1].replace("Speciality: ", "")
+        spec = "General Medicine"
+        for line in lines:
+            if line.startswith("Speciality:"):
+                spec = line.replace("Speciality: ", "")
+                break
         doc_list.append(f"• **{name}** ({spec})")
     doc_list_str = "\n".join(doc_list)
 
